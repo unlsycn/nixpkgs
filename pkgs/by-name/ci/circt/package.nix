@@ -19,12 +19,12 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "circt";
-  version = "1.87.0";
+  version = "1.98.0";
   src = fetchFromGitHub {
     owner = "llvm";
     repo = "circt";
     rev = "firtool-${version}";
-    hash = "sha256-buWpoym57YxyHJySYaektAUmuSRXMS+YBwtjWpoV1Vg=";
+    hash = "sha256-wkaspxwWJ7xJVQ+VZ9Z85zbzOcLAb3v55EJQjd+jiw8=";
     fetchSubmodules = true;
   };
 
@@ -76,6 +76,10 @@ stdenv.mkDerivation rec {
         ];
     in
     if lit-filters != [ ] then lib.strings.concatStringsSep "|" lit-filters else null;
+
+  postPatch = ''
+    patchShebangs tools/circt-test
+  '';
 
   preConfigure = ''
     find ./test -name '*.mlir' -exec sed -i 's|/usr/bin/env|${coreutils}/bin/env|g' {} \;
